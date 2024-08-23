@@ -12,16 +12,20 @@ import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
 import { Routes } from '@interfaces/routes.interface';
 import { ErrorMiddleware } from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import http from "http";
 
 export class App {
+  // eslint-disable-next-line prettier/prettier
   public app: express.Application;
   public env: string;
   public port: string | number;
+  server: http.Server;
 
   constructor(routes: Routes[]) {
     this.app = express();
     this.env = NODE_ENV || 'development';
-    this.port = PORT || 3000;
+    this.port = PORT || 8585;
+    this.server = http.createServer(this.app);
 
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
@@ -30,7 +34,7 @@ export class App {
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
+    this.server.listen(this.port, () => {
       logger.info(`=================================`);
       logger.info(`======= ENV: ${this.env} =======`);
       logger.info(`🚀 App listening on the port ${this.port}`);
@@ -39,7 +43,7 @@ export class App {
   }
 
   public getServer() {
-    return this.app;
+    return this.server;
   }
 
   private initializeMiddlewares() {

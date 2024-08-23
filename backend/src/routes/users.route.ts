@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Router } from 'express';
 import { UserController } from '@controllers/users.controller';
 import { CreateUserDto } from '@dtos/users.dto';
@@ -15,9 +16,10 @@ export class UserRoute implements Routes {
 
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.user.getUsers);
-    this.router.get(`${this.path}/:id(\\d+)`, this.user.getUserById);
+    this.router.get(`${this.path}/:id`, this.user.getUserById);
     this.router.post(`${this.path}`, ValidationMiddleware(CreateUserDto), this.user.createUser);
-    this.router.put(`${this.path}/:id(\\d+)`, ValidationMiddleware(CreateUserDto, true), this.user.updateUser);
-    this.router.delete(`${this.path}/:id(\\d+)`, this.user.deleteUser);
+    this.router.post(`${this.path}`, ValidationMiddleware(CreateUserDto));
+    this.router.put(`${this.path}/:id`, ValidationMiddleware(CreateUserDto, true), this.user.updateUser);
+    this.router.delete(`${this.path}/:id`, this.user.deleteUser);
   }
 }

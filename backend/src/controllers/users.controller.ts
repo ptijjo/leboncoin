@@ -12,7 +12,7 @@ export class UserController {
     try {
       const findAllUsersData: User[] = await this.user.findAllUser();
 
-      res.status(200).json({ data: findAllUsersData, message: 'findAll' });
+      res.status(200).json({ data: findAllUsersData, message: 'findAllUsers' });
     } catch (error) {
       next(error);
     }
@@ -23,7 +23,7 @@ export class UserController {
       const userId = String(req.params.id);
       const findOneUserData: User = await this.user.findUserById(userId);
 
-      res.status(200).json({ data: findOneUserData, message: 'findOne' });
+      res.status(200).json({ data: findOneUserData, message: 'findOneUser' });
     } catch (error) {
       next(error);
     }

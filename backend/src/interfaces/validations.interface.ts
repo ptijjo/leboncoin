@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-export interface Category {
+export interface Validation {
   id?: string;
-  name: string;
+  status: boolean;
 }

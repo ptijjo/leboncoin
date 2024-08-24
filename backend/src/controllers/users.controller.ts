@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { User } from '@interfaces/users.interface';
 import { UserService } from '@services/users.service';
+import jwt from 'jsonwebtoken';
+import { SECRET_KEY, EXPIRED_TOKEN } from '@config';
 
 export class UserController {
   public user = Container.get(UserService);
@@ -18,7 +20,7 @@ export class UserController {
 
   public getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = Number(req.params.id);
+      const userId = String(req.params.id);
       const findOneUserData: User = await this.user.findUserById(userId);
 
       res.status(200).json({ data: findOneUserData, message: 'findOne' });
@@ -38,9 +40,36 @@ export class UserController {
     }
   };
 
+  public connectUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const userData: { identifiant: string; password: string } = req.body;
+      const connectUserData: User = await this.user.connection(userData);
+
+      //Creation du token d'authentification
+
+      const token = jwt.sign(
+        {
+          userId: connectUserData.id,
+          userEmail: connectUserData.email,
+          userFirstName: connectUserData.first_name,
+          userLastName: connectUserData.last_name,
+          userRole: connectUserData.role,
+          userPhoto: connectUserData.photo_profil,
+          userLastConnection: connectUserData.last_connection,
+        },
+        SECRET_KEY as string,
+        { expiresIn: EXPIRED_TOKEN as string },
+      );
+
+      res.status(200).json({ data: connectUserData, token: token, message: 'connected' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = Number(req.params.id);
+      const userId = String(req.params.id);
       const userData: User = req.body;
       const updateUserData: User = await this.user.updateUser(userId, userData);
 
@@ -52,7 +81,7 @@ export class UserController {
 
   public deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = Number(req.params.id);
+      const userId = String(req.params.id);
       const deleteUserData: User = await this.user.deleteUser(userId);
 
       res.status(200).json({ data: deleteUserData, message: 'deleted' });

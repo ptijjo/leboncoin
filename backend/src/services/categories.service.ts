@@ -3,21 +3,11 @@ import { CategoryList, PrismaClient } from '@prisma/client';
 import { Category } from '../interfaces/categories.interface';
 import { categoryList } from '@/utils/categoryList';
 import { HttpException } from '@/exceptions/httpException';
+import { Service } from 'typedi';
 
+@Service()
 export class CategoryService {
   public category = new PrismaClient().category;
-
-  public getAllCategory = async (res: any) => {
-    const findCategory = await this.category.findMany();
-
-    if (!findCategory) {
-      return res.status(400).json(`No address`);
-    }
-
-    res.status(200).json(findCategory);
-
-    return findCategory;
-  };
 
   public createCategory = async (categoryData: Category) => {
     const listCategory = categoryList;
@@ -30,15 +20,28 @@ export class CategoryService {
       },
     });
 
-    if (findCategoryname) throw new HttpException(409, 'This category already eexist !');
+    if (findCategoryname) throw new HttpException(409, 'This category already exist !');
 
     const newCategory: Category = await this.category.create({
       data: {
-        ...categoryData,
         name: categoryData.name as CategoryList,
       },
     });
 
     return newCategory;
+  };
+
+  public deleteCategory = async (categoryId: string) => {
+    const findCategory: Category = await this.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+
+    if (!findCategory) throw new HttpException(409, 'This category already exist !');
+
+    const deleteElem = await this.category.delete({ where: { id: findCategory.id } });
+
+    return deleteElem;
   };
 }

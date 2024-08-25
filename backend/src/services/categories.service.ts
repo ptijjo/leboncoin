@@ -9,7 +9,17 @@ import { Service } from 'typedi';
 export class CategoryService {
   public category = new PrismaClient().category;
 
-  public createCategory = async (categoryData: Category) => {
+  public findCategoryByName = async (categoryData: CategoryList): Promise<Category> => {
+    const findCategory: Category = await this.category.findUnique({
+      where: {
+        name: categoryData,
+      },
+    });
+
+    return findCategory;
+  };
+
+  public createCategory = async (categoryData: Category): Promise<Category> => {
     const listCategory = categoryList;
 
     if (!listCategory.includes(categoryData.name)) throw new HttpException(409, "This category doesn't exist !");
@@ -31,7 +41,7 @@ export class CategoryService {
     return newCategory;
   };
 
-  public deleteCategory = async (categoryId: string) => {
+  public deleteCategory = async (categoryId: string): Promise<Category> => {
     const findCategory: Category = await this.category.findUnique({
       where: {
         id: categoryId,

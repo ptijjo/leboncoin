@@ -10,4 +10,5 @@ export interface Article {
   categoryId: string;
   favoriId?: string;
   validationId: string;
+  media?: string[];
 }

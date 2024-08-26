@@ -25,7 +25,7 @@ export class ArticleController {
   public findOneArticleById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const articleId = req.params.id;
-      const findArticle: Article = await this.article.findUserById(articleId);
+      const findArticle: Article = await this.article.findArticleById(articleId);
       res.status(200).json({ data: findArticle, messssage: 'FindOne' });
     } catch (error) {
       next(error);

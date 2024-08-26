@@ -54,6 +54,7 @@ export class UserController {
           userFirstName: connectUserData.first_name,
           userLastName: connectUserData.last_name,
           userRole: connectUserData.role,
+          userPseudo: connectUserData.pseudo,
           userPhoto: connectUserData.photo_profil,
           userLastConnection: connectUserData.last_connection,
         },

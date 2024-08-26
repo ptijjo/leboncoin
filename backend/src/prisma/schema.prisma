@@ -48,37 +48,38 @@ model Article {
   userId       String     @db.ObjectId
   user         User       @relation(fields: [userId], references: [id])
   media        Media[]
-  categoryId   String     @db.ObjectId
+  categoryId   String     @unique @db.ObjectId
   category     Category   @relation(fields: [categoryId], references: [id])
   validation   Validation @relation(fields: [validationId], references: [id])
-  validationId String     @db.ObjectId
+  validationId String     @unique @db.ObjectId
   favori       Favori[]
 }
 
 model Validation {
-  id      String    @id @default(auto()) @map("_id") @db.ObjectId
-  status  Boolean   @default(false)
-  Article Article[]
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  status    Boolean  @default(false)
+  article   Article? 
 }
 
 model Media {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   name      String
+  url       String
   articleId String  @db.ObjectId
-  article   Article @relation(fields: [articleId], references: [id])
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
 }
 
 model Category {
   id      String       @id @default(auto()) @map("_id") @db.ObjectId
   name    CategoryList @unique
-  article Article[]
+  article Article?
 }
 
 model Favori {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  user      User    @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String  @db.ObjectId
-  article   Article @relation(fields: [articleId], references: [id])
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId String  @db.ObjectId
 }
 
@@ -89,6 +90,6 @@ model Adress {
   postal  Int
   city    String
   country String
-  user    User   @relation(fields: [userId], references: [id])
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String @db.ObjectId
 }

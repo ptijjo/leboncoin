@@ -14,16 +14,18 @@ export class ArticleService {
     const allArticle: Article[] = await this.article.findMany();
     return allArticle;
   }
-  public async findUserById(userId: string): Promise<Article> {
-    const findUser: Article = await this.article.findUnique({ where: { id: userId } });
-    if (!findUser) throw new HttpException(409, "User doesn't exist");
-    return findUser;
+
+  public async findArticleById(articleId: string): Promise<Article> {
+    const findArticle: Article = await this.article.findUnique({ where: { id: articleId } });
+    if (!findArticle) throw new HttpException(409, "User doesn't exist");
+    return findArticle;
   }
+
   public async createArticle(
     userId: string,
     validationId: string,
     categoryId: string,
-    articleData: { title: string; description: string; prix: number },
+    articleData: { title: string; description: string; prix: number; media: string[] },
   ): Promise<Article> {
     const created_at = localDate();
     const createArticleData = await this.article.create({

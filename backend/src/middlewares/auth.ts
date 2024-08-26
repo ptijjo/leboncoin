@@ -16,14 +16,16 @@ export const auth = (req: any, res: Response, next: NextFunction) => {
       userId: string;
       userEmail: string;
       userRole: string;
+      userPseudo: string;
       userFirstName: string;
       userLastName: string;
       userPhoto: string;
       userLastConnection: string;
     };
-    const { userId, userEmail, userRole, userFirstName, userLastName, userPhoto, userLastConnection } = decodedToken;
+    const { userId, userEmail, userRole, userFirstName, userLastName, userPhoto, userLastConnection,userPseudo } = decodedToken;
     req.auth = {
       userId: userId,
+      userPseudo: userPseudo,
       userEmail: userEmail,
       userFistName: userFirstName,
       userLastName: userLastName,

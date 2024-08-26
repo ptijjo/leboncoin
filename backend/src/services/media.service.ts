@@ -17,7 +17,7 @@ export class MediaService {
   public createMedia = async (req: any, articleId: string): Promise<Media> => {
     const newMedia = await this.media.create({
       data: {
-        url: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`.split(' ').join(''),
+        url: `${req.protocol}://${req.get('host')}/public/image/${req.file.filename}`.split(' ').join(''),
         articleId: articleId,
       },
     });

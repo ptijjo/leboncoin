@@ -3,6 +3,7 @@ import { SECRET_KEY } from '@/config';
 import { Request, Response } from 'express';
 import multer from 'multer';
 import jwt from 'jsonwebtoken';
+import { join } from 'path';
 
 const MIME_TYPES = {
   'image/jpg': 'jpg',
@@ -11,30 +12,39 @@ const MIME_TYPES = {
 };
 
 const storage = multer.diskStorage({
-  // on enregistre sur le disque
-  destination: (req: Request, file: any, callback: (arg0: null, arg1: string) => void) => {
+  // Spécifie le répertoire de destination
+  destination: (req: Request, file: any, callback: (error: Error | null, destination: string) => void) => {
     // on indique ou on va enregistrer les fichiers
-    callback(null, '/public/image/');
+    const uploadPath = join(__dirname, '..',"..", 'public', 'image');
+    callback(null, uploadPath);
   },
-  filename: (req: any, res: Response, file, callback) => {
+
+  // Spécifie le nom du fichier
+  filename: (req: Request, file: any, callback: (error: Error | null, filename: string) => void) => {
     const header = req.header('Authorization');
 
     if (!header) {
-      return res.status(403).json({ error: 'Authorization header is missing' });
+      return callback(new Error('Authorization header is missing'), "");
     }
-    const token = header.split(' ')[1];
-    const decodedToken = jwt.verify(token, SECRET_KEY as string) as {
-      userId: string;
-      userEmail: string;
-      userPseudo: string;
-    };
-    const { userId, userEmail, userPseudo } = decodedToken;
 
-    const name = `${userPseudo}_${userEmail}_${userId}`;
-    const extension = MIME_TYPES[file.mimetype];
-    callback(null, name + Date.now() + '.' + extension);
+    try {
+      const token = header.split(' ')[1];
+      const decodedToken = jwt.verify(token, SECRET_KEY as string) as {
+        userId: string;
+        userEmail: string;
+        userPseudo: string;
+      };
+
+      const { userId, userEmail, userPseudo } = decodedToken;
+      const name = `${userPseudo}_${userEmail}_${userId}`;
+      const extension = MIME_TYPES[file.mimetype] || 'unknown';
+      const filename = `${name}${Date.now()}.${extension}`;
+      callback(null, filename);
+    } catch (error) {
+      callback(error as Error, '');
+    }
   },
 });
 
-const media = multer({ storage: storage }).single('photo');
+const media = multer({ storage }).single('photo');
 export default media;

@@ -47,23 +47,22 @@ model Article {
   prix         Int
   userId       String     @db.ObjectId
   user         User       @relation(fields: [userId], references: [id])
-  media        Media[]
   categoryId   String     @unique @db.ObjectId
   category     Category   @relation(fields: [categoryId], references: [id])
   validation   Validation @relation(fields: [validationId], references: [id])
   validationId String     @unique @db.ObjectId
+  media        Media[]
   favori       Favori[]
 }
 
 model Validation {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  status    Boolean  @default(false)
-  article   Article? 
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  status  Boolean  @default(false)
+  article Article?
 }
 
 model Media {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
   url       String
   articleId String  @db.ObjectId
   article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)

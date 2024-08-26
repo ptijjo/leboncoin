@@ -3,15 +3,10 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { Article } from '@interfaces/articles.interface';
 import { ArticleService } from '@/services/articles.service';
-import { Category } from '@/interfaces/categories.interface';
-import { CategoryService } from '@/services/categories.service';
-import { ValidationService } from '@/services/validations.service';
-import { Validation } from '@/interfaces/validations.interface';
+import { CategoryList } from '@prisma/client';
 
 export class ArticleController {
   public article = Container.get(ArticleService);
-  public category = Container.get(CategoryService);
-  public validation = Container.get(ValidationService);
 
   public findAllArticles = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -34,16 +29,12 @@ export class ArticleController {
 
   public createArticle = async (req: any, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const articleData: { title: string; description: string; prix: number } = req.body;
-      const userId = req.auth.userId as string;
+      const userId = req.auth.userId;
+      const articleData: { title: string; description: string; prix: number; nomCategory: CategoryList } = req.body;
 
-      const findCategory: Category = await this.category.findCategoryByName(req.body.category);
+      const article: Article = await this.article.createArticle(req, userId, articleData);
 
-      const validation: Validation = await this.validation.createValidation();
-
-      const newArticle: Article = await this.article.createArticle(userId, validation.id, findCategory.id, articleData);
-
-      res.status(201).json({ data: newArticle, message: 'article created' });
+      res.status(201).json({ data: article, message: 'article created' });
     } catch (error) {
       next(error);
     }

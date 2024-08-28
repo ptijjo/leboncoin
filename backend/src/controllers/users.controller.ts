@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { User } from '@interfaces/users.interface';
 import { UserService } from '@services/users.service';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { SECRET_KEY, EXPIRED_TOKEN } from '@config';
 
 export class UserController {
@@ -63,6 +63,29 @@ export class UserController {
       );
 
       res.status(200).json({ data: connectUserData, token: token, message: 'connected' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public whoIsConnected = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const token = req.headers.authorization.split(' ')[1];
+      const decodedToken = jwt.verify(token, SECRET_KEY) as JwtPayload;
+      const userId: string = await decodedToken.userId;
+      const userPhoto = await decodedToken.userPhoto;
+      const userEmail = await decodedToken.userEmail;
+      const userPseudo = await decodedToken.userPseudo;
+      const userRole = await decodedToken.userRole;
+
+      res.status(200).json({
+        status: 'succes 👍',
+        userId,
+        userPhoto,
+        userEmail,
+        userPseudo,
+        userRole,
+      });
     } catch (error) {
       next(error);
     }

@@ -9,9 +9,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { UserData } from '@/lib/UserData';
 
 const HeaderMenu = () => {
-   
+
     const queryClient = useQueryClient();
     const userData: UserData | undefined = queryClient.getQueryData(['userData']);
+
+    console.log(userData?.userPseudo)
 
     return (
         <div className='flex flex-row items-center justify-center w-[10%] lg:w-[20%]'>
@@ -28,9 +30,10 @@ const HeaderMenu = () => {
                         <p className='text-center'>Se connecter</p>
                     </div>
                 </Link> :
-                    <Link href="/connection">
-                        <div className='flex flex-col items-center justify-center underline-offset-8 decoration-2 decoration-orange-500 hover:underline hover:transition-all cursor-pointer hover:text-orange-500 text-lg'>
-                            {userData.pseudo}
+                    <Link href="/connection" className='border flex flex-col items-center justify-center underline-offset-8 decoration-2 decoration-orange-500 hover:underline hover:transition-all cursor-pointer hover:text-orange-500 text-lg relative'>
+                        <div className='absolute -top-[30px] left-[5px] flex flex-col items-center justify-center'>
+                            <img src={userData.userPhoto} alt="photo" className='rounded-full w-[25px]' />
+                            {userData?.userPseudo}
                         </div>
                     </Link>}
             </div>
@@ -39,7 +42,7 @@ const HeaderMenu = () => {
                 <Menubar className='border-none'>
                     <MenubarMenu>
                         <MenubarTrigger><HiDotsVertical className='text-xl' /></MenubarTrigger>
-                        <MenubarContent className='border-none z-10'>
+                        {(userData === undefined) ? <MenubarContent className='border-none z-10'>
                             <Link href="/favori">
                                 <MenubarItem className='flex flex-row items-center justify-center gap-1'>
                                     <CiHeart className='text-lg' />
@@ -52,7 +55,20 @@ const HeaderMenu = () => {
                                     <p>Se connecter</p>
                                 </MenubarItem>
                             </Link>
-                        </MenubarContent>
+                        </MenubarContent> :
+                            <MenubarContent className='border-none z-10'>
+                                <Link href="/favori">
+                                    <MenubarItem className='flex flex-row items-center justify-center gap-1'>
+                                        <CiHeart className='text-lg' />
+                                        <p>Favoris</p>
+                                    </MenubarItem>
+                                </Link>
+                                <Link href="/connection">
+                                    <MenubarItem className='flex flex-row items-center justify-center gap-1'>
+                                        {userData?.userPseudo}
+                                    </MenubarItem>
+                                </Link>
+                            </MenubarContent>}
                     </MenubarMenu>
                 </Menubar>
             </div>

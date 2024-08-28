@@ -1,5 +1,6 @@
 export  interface UserData {
-    email: string;
-    pseudo: string;
-    role: string;
+    userEmail: string;
+    userPseudo: string;
+    userPhoto: string;
+    userRole: string;
 }

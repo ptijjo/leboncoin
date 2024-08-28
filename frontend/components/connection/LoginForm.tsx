@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -6,6 +7,7 @@ import axios from 'axios';
 import { Button } from '../../components/ui/button';
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
+import { Url } from '@/lib/Url';
 
 
 type Data = {
@@ -22,16 +24,17 @@ const LoginForm = () => {
         formState: { errors },
     } = useForm<Data>();
 
+
+
     const Login: SubmitHandler<Data> = async (data) => {
         try {
 
-            const user = await axios.post("", data);
+            const user = await axios.post(Url.connection, data);
             localStorage.setItem("token", user.data.token);
-            const token = localStorage.getItem("token") as string
             router.push('/');
 
 
-        } catch (error:any) {
+        } catch (error: any) {
             console.log(error);
             toast.error(`${error.response.data}`)
         }
@@ -52,7 +55,7 @@ const LoginForm = () => {
                 </div>
                 <Button type="submit" className='bg-orange-500 text-white w-3/4 lg:w-[40%]'>Connection</Button>
             </div>
-            <ToastContainer autoClose={5000}/>
+            <ToastContainer autoClose={5000} />
         </form>
     )
 }

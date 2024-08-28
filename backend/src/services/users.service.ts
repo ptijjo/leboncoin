@@ -5,6 +5,8 @@ import { CreateUserDto } from '@dtos/users.dto';
 import { HttpException } from '@/exceptions/httpException';
 import { User } from '@interfaces/users.interface';
 import { localDate } from '@/utils/localDate';
+import { SECRET_KEY } from '@/config';
+import jwt from 'jsonwebtoken';
 
 @Service()
 export class UserService {

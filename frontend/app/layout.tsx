@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import QueryProvider from "@/lib/QueryProvider";
+import Header from "@/components/header/Header";
+import Footer from "@/components/Footer";
 
 
 export const metadata: Metadata = {
@@ -14,7 +17,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body>{children}</body>
+      <body>
+        <QueryProvider>
+          <div className="container flex flex-col items-center w-full max-w-[1480] border my-0 mx-auto">
+            <Header />
+            <main className="flex flex-col items-center w-full">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </QueryProvider>
+      </body>
     </html>
   );
 }

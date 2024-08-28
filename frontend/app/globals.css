@@ -9,3 +9,9 @@
   list-style: none;
   text-decoration: none;
 }
+
+body{
+  display: flex;
+  width: full;
+  min-height: 100dvh;
+}

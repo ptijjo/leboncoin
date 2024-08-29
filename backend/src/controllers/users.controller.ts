@@ -70,7 +70,8 @@ export class UserController {
 
   public whoIsConnected = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const token = req.headers.authorization.split(' ')[1];
+      const token = req.body.token;
+
       const decodedToken = jwt.verify(token, SECRET_KEY) as JwtPayload;
       const userId: string = await decodedToken.userId;
       const userPhoto = await decodedToken.userPhoto;
@@ -79,7 +80,6 @@ export class UserController {
       const userRole = await decodedToken.userRole;
 
       res.status(200).json({
-        status: 'succes 👍',
         userId,
         userPhoto,
         userEmail,

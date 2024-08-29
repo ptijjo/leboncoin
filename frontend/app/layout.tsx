@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import QueryProvider from "@/lib/QueryProvider";
 import Header from "@/components/header/Header";
 import Footer from "@/components/Footer";
+import StoreProvider from "@/app/StoreProvider";
 
 
 export const metadata: Metadata = {
@@ -16,9 +16,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <body>
-        <QueryProvider>
+    <StoreProvider>
+      <html lang="fr">
+        <body>
           <div className="container flex flex-col items-center w-full max-w-[1480] border my-0 mx-auto">
             <Header />
             <main className="flex flex-col items-center w-full">
@@ -26,8 +26,8 @@ export default function RootLayout({
             </main>
             <Footer />
           </div>
-        </QueryProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </StoreProvider>
   );
 }

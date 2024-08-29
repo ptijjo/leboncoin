@@ -20,7 +20,13 @@ export class ArticleService {
   public validation = Container.get(ValidationService);
 
   public async findAllArticle(): Promise<Article[]> {
-    const allArticle: Article[] = await this.article.findMany();
+    const allArticle: Article[] = await this.article.findMany({
+      include: {
+        category: true,
+        user: true,
+        validation: true,
+      },
+    });
     return allArticle;
   }
 

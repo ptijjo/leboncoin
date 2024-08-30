@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { CiSquarePlus } from "react-icons/ci";
-import { UserData } from '@/lib/UserData';
+import { UserData } from '@/lib/InterfaceData';
 import { useRouter } from 'next/navigation';
 import { Selector } from '@/lib/features/hooks';
 import { selectUser } from '@/lib/features/user/userSlice';
@@ -27,7 +27,7 @@ const Header = () => {
                     <Image src="/logo/logo.png" alt="Logo" width={80} height={80} priority className='w-auto h-auto' />
                 </div>
             </Link>
-            <Button className='bg-orange-500 text-white gap-2' onClick={handlePostAnnonce}><CiSquarePlus className='text-lg' /> Deposer un annonce</Button>
+            <Button className='bg-orange-500 text-black gap-2' onClick={handlePostAnnonce}><CiSquarePlus className='text-lg' /> Deposer un annonce</Button>
             <Recherche />
             <HeaderMenu />
         </header>

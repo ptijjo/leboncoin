@@ -1,5 +1,5 @@
 import { Url } from '@/lib/Url';
-import { UserData } from '@/lib/UserData';
+import { UserData } from '@/lib/InterfaceData';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
@@ -42,12 +42,12 @@ export const userSlice = createSlice({
                 state.status = "loading";
             })
         
-            .addCase(login.fulfilled, (state, action) => {
+            .addCase(login.fulfilled, (state, action):void => {
                 state.status = "success";
                 state.user = action.payload;
             })
 
-            .addCase(login.rejected, (state, action) => {
+            .addCase(login.rejected, (state, action):void => {
                 state.status = 'failed';
                 state.error = action.error.message as string;
             });

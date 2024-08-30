@@ -2,13 +2,15 @@
 import React, { useEffect } from 'react';
 import { HiOutlineUser } from "react-icons/hi2";
 import { CiHeart } from "react-icons/ci";
-import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarShortcut, MenubarTrigger, } from "@/components/ui/menubar";
+import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger, } from "@/components/ui/menubar";
 import { HiDotsVertical } from "react-icons/hi";
 import Link from 'next/link';
-import { UserData } from '@/lib/UserData';
+import { UserData } from '@/lib/InterfaceData';
 import Image from 'next/image';
 import { Dispatch, Selector } from '@/lib/features/hooks';
 import { login, selectUser, selectUserStatus } from '@/lib/features/user/userSlice';
+import Loading from '@/app/loading';
+
 
 const HeaderMenu = () => {
 
@@ -19,16 +21,15 @@ const HeaderMenu = () => {
 
 
     useEffect(() => {
+
         if (status === 'idle' && token !== null) {
             dispatch(login(token as string));
-        }
-        else return
+        } else return
     }, [token, status, dispatch]);
 
     if (status === "loading") {
-        return "loading ..."
-    }
-
+        return <Loading />
+    };
 
     return (
         <div className='flex flex-row items-center justify-center w-[10%] lg:w-[20%]'>
@@ -45,50 +46,40 @@ const HeaderMenu = () => {
                         <p className='text-center'>Se connecter</p>
                     </div>
                 </Link> :
-                    <Link href="/profil" className='flex flex-col items-center justify-center hover:scale-110 text-lg'>
+                    <Link href="/profil" className='hover:scale-110'>
                         <div className='flex flex-row items-center justify-center gap-1'>
                             <Image src={userData.userPhoto} alt="photo profil" priority width={30} height={30} className='rounded-full w-auto h-auto' />
                             {userData?.userPseudo}
                         </div>
                     </Link>}
             </div>
-
             <div className='flex lg:hidden'>
                 <Menubar className='border-none'>
                     <MenubarMenu>
-                        <MenubarTrigger><HiDotsVertical className='text-xl' /></MenubarTrigger>
-                        {(!userData) ? <MenubarContent className='border-none z-10'>
+                        <MenubarTrigger id='dot_bouton' aria-label='dot_bouton'><HiDotsVertical className='text-xl' /></MenubarTrigger>
+                        <MenubarContent className='border-none z-10'>
                             <Link href="/favori">
                                 <MenubarItem className='flex flex-row items-center justify-center gap-1'>
                                     <CiHeart className='text-lg' />
                                     <p>Favoris</p>
                                 </MenubarItem>
                             </Link>
-                            <Link href="/connection">
+                            {(!userData) ? <Link href="/connection">
                                 <MenubarItem className='flex flex-row items-center justify-center gap-1'>
                                     <HiOutlineUser className='text-lg' />
                                     <p>Se connecter</p>
                                 </MenubarItem>
-                            </Link>
-                        </MenubarContent> :
-                            <MenubarContent className='border-none z-10'>
-                                <Link href="/favori">
+                            </Link> :
+                                <Link href="/connection">
                                     <MenubarItem className='flex flex-row items-center justify-center gap-1'>
-                                        <CiHeart className='text-lg' />
-                                        <p>Favoris</p>
-                                    </MenubarItem>
-                                </Link>
-                                <Link href="/profil">
-                                    <MenubarItem className='flex flex-row items-center justify-center gap-1'>
-                                    <Image src={userData.userPhoto} alt="photo profil" priority width={20} height={20} className='rounded-full w-auto h-auto' />
+                                        <Image src={userData.userPhoto} alt="photo profil" priority width={30} height={30} className='rounded-full w-auto h-auto' />
                                         {userData?.userPseudo}
                                     </MenubarItem>
-                                </Link>
-                            </MenubarContent>}
+                                </Link>}
+                        </MenubarContent>
                     </MenubarMenu>
                 </Menubar>
             </div>
-
         </div>
     )
 }

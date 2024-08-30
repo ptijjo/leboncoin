@@ -46,5 +46,5 @@ const storage = multer.diskStorage({
   },
 });
 
-const media = multer({ storage }).single('photo');
+const media = multer({ storage }).single('media');
 export default media;

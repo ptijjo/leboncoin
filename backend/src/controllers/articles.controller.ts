@@ -30,7 +30,7 @@ export class ArticleController {
   public createArticle = async (req: any, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = req.auth.userId;
-      const articleData: { title: string; description: string; prix: number; nomCategory: CategoryList } = req.body;
+      const articleData: { title: string; description: string; prix: string; nomCategory: CategoryList } = req.body;
 
       const article: Article = await this.article.createArticle(req, userId, articleData);
 

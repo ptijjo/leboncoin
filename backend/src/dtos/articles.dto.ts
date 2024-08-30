@@ -16,6 +16,5 @@ export class CreateArticleDto {
 
   @IsString()
   @IsNotEmpty()
-  //@Min(1)
-  public prix: number;
+  public prix: string;
 }

@@ -25,6 +25,8 @@ export class ArticleService {
         category: true,
         user: true,
         validation: true,
+        media:true
+      
       },
     });
     return allArticle;
@@ -39,7 +41,7 @@ export class ArticleService {
   public async createArticle(
     req: any,
     userId: string,
-    articleData: { title: string; description: string; prix: number; nomCategory: CategoryList },
+    articleData: { title: string; description: string; prix: string; nomCategory: CategoryList },
   ): Promise<Article> {
     const created_at = localDate();
 

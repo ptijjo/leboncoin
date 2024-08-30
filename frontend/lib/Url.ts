@@ -3,5 +3,6 @@ export const Url = {
     enregistrement: "http://localhost:8080/users",
     whoConnected: "http://localhost:8080/users_whoConnected",
     
-    getAllArticle:"http://localhost:8080/articles"
+    getAllArticle: "http://localhost:8080/articles",
+    newArticle:"http://localhost:8080/articles",
 }

@@ -8,13 +8,21 @@ import { Button } from '../ui/button';
 import { CiSquarePlus } from "react-icons/ci";
 import { UserData } from '@/lib/InterfaceData';
 import { useRouter } from 'next/navigation';
-import { Selector } from '@/lib/features/hooks';
-import { selectUser } from '@/lib/features/user/userSlice';
+import { Dispatch, Selector } from '@/lib/features/hooks';
+import { login, selectUser} from '@/lib/features/user/userSlice';
 
 const Header = () => {
 
     const router = useRouter();
+    const dispatch = Dispatch();
     const userData: UserData = Selector(selectUser);
+    const token: string | null = typeof window !== 'undefined' ? localStorage.getItem("token") as string : null;
+
+    useEffect(() => {
+        if (token !== null) {
+            dispatch(login(token as string));
+        }else return
+    }, [dispatch, token])
 
     const handlePostAnnonce = (): void => {
         (!userData) ? router.push("/connection") : router.push("/ajouterAnnonce")
@@ -35,3 +43,5 @@ const Header = () => {
 }
 
 export default Header
+
+

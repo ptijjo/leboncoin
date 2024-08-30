@@ -1,9 +1,10 @@
-import React from 'react'
+import React from 'react';
+import Annonce from "../../components/annonce/Annonce";
 
 const AjouterAnnonce = () => {
   return (
     <div>
-      <h2>new annonce</h2>
+      <Annonce/>
     </div>
   )
 }

@@ -3,12 +3,12 @@ export interface Article {
   id?: string;
   title: string;
   description: string;
-  prix: number;
+  prix: string;
   created_at: string;
   last_update?: string;
   userId: string;
   categoryId: string;
   favoriId?: string;
   validationId: string;
-  media?: string[];
+  media?: { id: string; url: string; articleId: string; }[];
 }

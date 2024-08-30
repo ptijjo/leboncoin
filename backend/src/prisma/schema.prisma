@@ -44,7 +44,7 @@ model Article {
   description  String
   created_at   String
   last_update  String     @default("")
-  prix         Int
+  prix         String
   userId       String     @db.ObjectId
   user         User       @relation(fields: [userId], references: [id])
   categoryId   String     @unique @db.ObjectId

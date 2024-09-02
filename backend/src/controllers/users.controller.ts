@@ -70,7 +70,11 @@ export class UserController {
 
   public whoIsConnected = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const token = req.body.token;
+      const token = req.headers.authorization?.split(' ')[1];
+
+      if (!token) {
+        throw Error('Token is missing');
+      }
 
       const decodedToken = jwt.verify(token, SECRET_KEY) as JwtPayload;
       const userId: string = await decodedToken.userId;

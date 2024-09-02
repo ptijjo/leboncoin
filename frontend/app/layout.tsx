@@ -16,9 +16,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <StoreProvider>
-      <html lang="fr">
-        <body>
+    <html lang="fr">
+      <body>
+        <StoreProvider>
           <div className="container flex flex-col items-center w-full max-w-[1480] border my-0 mx-auto">
             <Header />
             <main className="flex flex-col items-center w-full">
@@ -26,8 +26,8 @@ export default function RootLayout({
             </main>
             <Footer />
           </div>
-        </body>
-      </html>
-    </StoreProvider>
+        </StoreProvider>
+      </body>
+    </html>
   );
 }

@@ -8,8 +8,6 @@ import { Button } from '../../components/ui/button';
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import { Url } from '@/lib/Url';
-import { Dispatch } from '@/lib/features/hooks';
-import { login } from '@/lib/features/user/userSlice';
 
 
 type Data = {
@@ -20,7 +18,6 @@ type Data = {
 const LoginForm = () => {
 
     const router = useRouter();
-    const dispatch = Dispatch();
 
     const {
         register,
@@ -34,8 +31,6 @@ const LoginForm = () => {
         try {
             const user = await axios.post(Url.connection, data);
             localStorage.setItem("token", user.data.token);
-            const token: string = localStorage.getItem("token") as string;
-            dispatch(login(token));
             router.push('/');
 
         } catch (error: any) {

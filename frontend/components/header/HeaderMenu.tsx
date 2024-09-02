@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HiOutlineUser } from "react-icons/hi2";
 import { CiHeart } from "react-icons/ci";
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger, } from "@/components/ui/menubar";
@@ -7,33 +7,57 @@ import { HiDotsVertical } from "react-icons/hi";
 import Link from 'next/link';
 import { UserData } from '@/lib/InterfaceData';
 import Image from 'next/image';
-import { Dispatch, Selector } from '@/lib/features/hooks';
-import { login, selectUser, selectUserStatus } from '@/lib/features/user/userSlice';
 import Loading from '@/app/loading';
+import { GrValidate } from "react-icons/gr";
+import { useQuery } from '@tanstack/react-query';
+import { userDataConnected } from '@/lib/features/queryFunctions/userFunctions';
+
+
 
 
 const HeaderMenu = () => {
 
-    const dispatch = Dispatch();
-    const userData: UserData = Selector(selectUser);
-    const status: string = Selector(selectUserStatus);
-    const token: string | null = typeof window !== 'undefined' ? localStorage.getItem("token") as string : null;
+    const [token, setToken] = useState<string | null>(null);
+
+    useEffect(() => {
+        setToken(typeof window !== 'undefined' ? localStorage.getItem("token") : null);
+    }, []);
+
+    const { data: userData, isLoading, error, isSuccess, isError } = useQuery({
+        queryKey: ["userConnected"],
+        queryFn: async () => {
+            if (token) {
+                return await userDataConnected(token);
+            }
+            return null;
+        },
+        enabled: Boolean(token),
+        refetchOnMount: false,
+
+    })
 
 
     useEffect(() => {
+        if (userData) console.log(userData);
 
-        if (status === 'idle' && token !== null) {
-            dispatch(login(token as string));
-        } else return
-    }, [token, status, dispatch]);
+    }, [isSuccess, userData]);
 
-    if (status === "loading") {
-        return <Loading />
-    };
+
+    if (isLoading) return <Loading />
+
+    if (error) return <div>Il y a une erreur ... </div>
+
 
     return (
         <div className='flex flex-row items-center justify-center w-[10%] lg:w-[20%]'>
             <div className='hidden lg:flex flex-row items-center gap-3'>
+                {(userData?.userRole !== "user") && <Link href="/validationAnnonce">
+                    <div className='flex flex-col items-center justify-center underline-offset-8 decoration-2 decoration-orange-500 hover:underline hover:transition-all cursor-pointer hover:text-orange-500 text-lg'>
+                        <GrValidate />
+                        <p>Validation Article</p>
+                    </div>
+                </Link>}
+
                 <Link href="/favori">
                     <div className='flex flex-row items-center justify-center underline-offset-8 decoration-2 decoration-orange-500 hover:underline cursor-pointer hover:text-orange-500 text-lg'>
                         <CiHeart />
@@ -58,6 +82,12 @@ const HeaderMenu = () => {
                     <MenubarMenu>
                         <MenubarTrigger id='dot_bouton' aria-label='dot_bouton'><HiDotsVertical className='text-xl' /></MenubarTrigger>
                         <MenubarContent className='border-none z-10'>
+                            {(userData?.userRole !== "user") && <Link href="/validationAnnonce">
+                                <MenubarItem className='flex flex-row items-center justify-center gap-1'>
+                                    <GrValidate />
+                                    <p>Validation Article</p>
+                                </MenubarItem>
+                            </Link>}
                             <Link href="/favori">
                                 <MenubarItem className='flex flex-row items-center justify-center gap-1'>
                                     <CiHeart className='text-lg' />

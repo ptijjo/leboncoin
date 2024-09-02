@@ -1,19 +1,16 @@
 "use client"
-import React, { useRef } from 'react';
-import { store, Store } from '../lib/features/store';
-import { Provider } from "react-redux";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import React from 'react';
+
+const queryClient = new QueryClient();
 
 const StoreProvider = ({ children }: { children: React.ReactNode }) => {
-    const storeRef = useRef<Store>()
-    if (!storeRef.current) {
-        // Create the store instance the first time this renders
-        storeRef.current = store()
-    }
-
     return (
-        <Provider store={storeRef.current}>
+        <QueryClientProvider client={queryClient}>
             {children}
-        </Provider>
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
     )
 }
 

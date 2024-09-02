@@ -8,21 +8,19 @@ import { Button } from '../ui/button';
 import { CiSquarePlus } from "react-icons/ci";
 import { UserData } from '@/lib/InterfaceData';
 import { useRouter } from 'next/navigation';
-import { Dispatch, Selector } from '@/lib/features/hooks';
-import { login, selectUser} from '@/lib/features/user/userSlice';
+import { useQueryClient } from '@tanstack/react-query';
+
+
 
 const Header = () => {
 
     const router = useRouter();
-    const dispatch = Dispatch();
-    const userData: UserData = Selector(selectUser);
-    const token: string | null = typeof window !== 'undefined' ? localStorage.getItem("token") as string : null;
+    const queryClient = useQueryClient();
+    const userData: UserData | undefined = queryClient.getQueryData(["userConnected"])
 
     useEffect(() => {
-        if (token !== null) {
-            dispatch(login(token as string));
-        }else return
-    }, [dispatch, token])
+        if (userData) console.log(userData) 
+    }, [userData])
 
     const handlePostAnnonce = (): void => {
         (!userData) ? router.push("/connection") : router.push("/ajouterAnnonce")
